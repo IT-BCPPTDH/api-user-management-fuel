@@ -8,6 +8,9 @@ A micro service API to handle and manage user data based on employee data for PT
 For development, you will only need Node.js and a node global package, npm, installed in your environement.
 
 ### Node
+
+This system should run on Nodejs minimum version 18 up
+
 - #### Node installation on Windows
 
   Just go on [official Node.js website](https://nodejs.org/) and download the installer.
@@ -26,28 +29,24 @@ Also, be sure to have `git` available in your PATH, `npm` might need it (You can
 If the installation was successful, you should be able to run the following command.
 
     $ node --version
-    v8.11.3
+    v18.17.0
 
     $ npm --version
-    6.1.0
+    9.6.7
 
 If you need to update `npm`, you can make it using `npm`! Cool right? After running the following command, just open again the command line and be happy.
 
     $ npm install npm -g
 
 ###
-### Yarn installation
-  After installing node, this project will need yarn too, so just run the following command.
-
-      $ npm install -g yarn
 
 ---
 
 ## Install
 
-    $ git clone https://github.com/YOUR_USERNAME/PROJECT_TITLE
-    $ cd PROJECT_TITLE
-    $ yarn install
+    $ git clone (https://github.com/Thinkmatch-Dev-Team/api-user-management)
+    $ cd api-user-management
+    $ npm install
 
 ## Configure app
 
