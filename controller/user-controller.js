@@ -1,6 +1,8 @@
 const db = require('../database/helper');
 const {encrypter} = require('../helpers/bcryptHelper')
 const userJson = require('../data-json/user-ptdh.json')
+const { HTTP_STATUS, STATUS_MESSAGE } = require('../helpers/enumHelper')
+const { QUERY_STRING } = require('../helpers/queryEnumHelper')
 
 async function createUser(userData) {
   const newUser = { ...userData };
@@ -8,90 +10,120 @@ async function createUser(userData) {
   const password_hash = encrypter(password);
 
   try {
-    const inserted = await db.query('SELECT public.create_user($1, $2, $3, $4, $5)',
+    const inserted = await db.query(QUERY_STRING.CREATE_USER,
       [newUser.JDE, newUser.fullname, newUser.position, newUser.division, password_hash]);
 
     if (inserted) {
+      const user = await getUser(inserted.rows[0].create_user)
       return {
-        message: "User Created",
-        userId: inserted.rows[0].create_user
+        status: HTTP_STATUS.OK,
+        message: STATUS_MESSAGE.SUCCESS_CREATE_USER,
+        data: user.success ? user.data : {}
       };
     }
   } catch (error) {
-    console.error('Error creating user:', error);
-    return 'Failed to create user';
+    return {
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.ERR_CREATE_USER} ${error}`,
+    };
   }
 }
 
 async function getUser(userId) {
   try {
-    const result = await db.query('SELECT * FROM user_view WHERE id = $1', [userId]);
-    return result.rows[0];
+    const result = await db.query(QUERY_STRING.GET_USER_BY_ID, [userId]);
+    return {
+      success: true,
+      status: HTTP_STATUS.OK,
+      data: result.rows[0]
+    }
   } catch (error) {
-    console.error('Error getting user:', error);
-    return 'Failed to retrieve user';
+    return {
+      success: false,
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.FAILED_GET_USER} ${error}`,
+    };
   }
 }
 
 async function getAllUsers() {
   try {
-    const result = await db.query('SELECT * FROM user_view');
-    return result.rows;
+    const result = await db.query(QUERY_STRING.GET_ALL_USER);
+    return {
+      status: HTTP_STATUS.OK,
+      data: result.rows
+    }
   } catch (error) {
-    console.error('Error getting all users:', error);
-    return 'Failed to retrieve users';
+    return {
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.FAILED_GET_ALL_USER} ${error}`,
+    };
   }
 }
 
 async function getUsersPaginated(pageNum, pageSize) {
   try {
-    const result = await db.query('SELECT * FROM public.get_users_paginated($1, $2)', [pageNum, pageSize]);
-    return result.rows;
+    const result = await db.query(QUERY_STRING.GET_USER_PAGINATED, [pageNum, pageSize]);
+    return {
+      status: HTTP_STATUS.OK,
+      data: result.rows
+    }
   } catch (error) {
-    console.error('Error getting users paginated:', error);
-    return 'Failed to retrieve users paginated';
+    return {
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.FAILED_PAGINATED_USER} ${error}`,
+    };
   }
 }
 
-async function updateUser(userId, updatedData) {
+async function updateUser(updatedData) {
   try {
-    const params = [userId];
-
+    const params = [];
+    params.push(updatedData.userId || null);
     params.push(updatedData.JDE || null);
     params.push(updatedData.fullname || null);
     params.push(updatedData.position || null);
     params.push(updatedData.division || null);
 
-    await db.query('SELECT update_user($1, $2, $3, $4, $5)',
-      params);
+    await db.query(QUERY_STRING.UPDATE_USER,params);
 
-    return await getUser(userId); 
+    const user = await getUser(updatedData.userId); 
+
+    return {
+      status: HTTP_STATUS.OK,
+      data: user.success ? user.data : {},
+      message: STATUS_MESSAGE.SUCCESS_UPDATE_USER
+    }
   } catch (error) {
-    console.error('Error updating user:', error);
-    return 'Failed to update user';
+    return {
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.ERR_UPDATE_USER} ${error}`,
+    };
   }
 }
 
 async function deleteUser(userId) {
   try {
-    const deletionResult = await db.query('SELECT delete_user($1)', [userId]);
-    return deletionResult.rows[0].delete_user; 
+    const deletionResult = await db.query(QUERY_STRING.DELETE_USER, [userId]);
+    return {
+      status: HTTP_STATUS.OK,
+      data: deletionResult.rows[0].delete_user,
+      message: STATUS_MESSAGE.SUCCESS_DEL_USER
+    }
   } catch (error) {
-    console.error('Error deleting user:', error);
-    return 'Failed to delete user';
+    return {
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.ERR_DEL_USER} ${error}`,
+    };
   }
 }
 
 async function bulkInsert(){
-  return {
-    message: "Disabled"
+  for (let index = 0; index < userJson.length; index++) {
+    const element = userJson[index];
+    const inserted = await createUser(element)
+    console.log(inserted)
   }
-  // for (let index = 0; index < userJson.length; index++) {
-  //   const element = userJson[index];
-  //   const inserted = await createUser(element)
-  //   console.log(inserted)
-    
-  // }
 }
 
 module.exports = { 

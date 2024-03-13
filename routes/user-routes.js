@@ -2,11 +2,11 @@
 const userHandler = require('../handlers/user-handler');
 
 module.exports = (app) => {
-  app.post('/user', (res, req) => userHandler.handleUserCreation(res, req));
-  app.get('/user/:userId', (res, req) => userHandler.handleUserRetrieval(res, req));
-  app.get('/user/:pageNum/:pageSize', (res, req) => userHandler.handleUserPagination(res, req));
-  app.put('/user/:userId', (res, req) => userHandler.handleUserUpdate(res, req));
-  app.del('/user/:userId', (res, req) => userHandler.handleUserDeletion(res, req));
-
-  app.get('/bulk-insert', (res, req) => userHandler.handleInsertBulkUser(res,req))
+  app.post('/api-user/create', (res, req) => userHandler.handleUserCreation(res, req));
+  app.get('/api-user/get/:userId', (res, req) => userHandler.handleUserRetrieval(res, req));
+  app.get('/api-user/get-all', (res, req) => userHandler.handleUserRetrievalAll(res, req));
+  app.get('/api-user/paginate/:pageNum/:pageSize', (res, req) => userHandler.handleUserPagination(res, req));
+  app.put('/api-user/update/:userId', (res, req) => userHandler.handleUserUpdate(res, req));
+  app.del('/api-user/delete/:userId', (res, req) => userHandler.handleUserDeletion(res, req));
+  app.get('/api-user/bulk-insert', (res, req) => userHandler.handleInsertBulkUser(res,req))
 };
