@@ -50,16 +50,26 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
 
 ## Configure app
 
-Open `a/nice/path/to/a.file` then edit it with your settings. You will need:
+Copy file `.env-example` with syntax: 
 
-- A setting;
-- Another setting;
-- One more setting;
+    $ mv .env-example .env
 
-## Running the project
+Open `.env` then edit it with your settings. You will need:
 
-    $ yarn start
+- Database;
+- Salt Round (input random string);
+- Secret Code (input random string);
 
-## Simple build for production
+## Run DB Migrations
 
-    $ yarn build
+For initial setup, make sure the postgreSQL data has database name stated in `.env` file
+
+Run migration with syntax:
+
+    $ npm run migrate:latest
+
+If all tables, niew, functions already created, you can start to run the system
+
+## Running the system
+
+    $  npm start

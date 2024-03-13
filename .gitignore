@@ -1,4 +1,4 @@
 .env
 bun.lockb
-package-lock.js
+package-lock.json
 node_modules
