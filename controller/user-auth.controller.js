@@ -23,7 +23,7 @@ async function authUser(user) {
 
     if (!credentials) {
       return {
-        status: HTTP_STATUS.NOT_FOUND,
+        status: HTTP_STATUS.UNAUTHORIZED,
         message: STATUS_MESSAGE.CRED_NOT_FOUND,
       };
     }
@@ -59,7 +59,7 @@ async function authUser(user) {
     } else {
       await logAuthenticationFailure();
       return {
-        status: HTTP_STATUS.BAD_REQUEST,
+        status: HTTP_STATUS.NO_CONTENT,
         message: STATUS_MESSAGE.INVALID_JDE
       };
     }
