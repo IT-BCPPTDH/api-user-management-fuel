@@ -124,6 +124,11 @@ async function bulkInsert(){
     const inserted = await createUser(element)
     console.log(inserted)
   }
+
+  return {
+    status: HTTP_STATUS.OK,
+    message: STATUS_MESSAGE.SUCCESS_CREATE_USER
+  }
 }
 
 module.exports = { 
