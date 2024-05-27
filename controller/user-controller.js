@@ -122,7 +122,7 @@ async function bulkInsert(){
   for (let index = 0; index < userJson.length; index++) {
     const element = userJson[index];
     const inserted = await createUser(element)
-    console.log(inserted)
+    // console.log(inserted)
   }
 
   return {
