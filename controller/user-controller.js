@@ -46,6 +46,24 @@ async function getUser(userId) {
   }
 }
 
+async function getOperator() {
+  try {
+    const result = await db.query(QUERY_STRING.GET_MASTER_OPERATOR, ['Operator']);
+    return {
+      success: true,
+      status: HTTP_STATUS.OK,
+      data: result.rows,
+      totalRow: result.rows.length
+    }
+  } catch (error) {
+    return {
+      success: false,
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.FAILED_GET_USER} ${error}`,
+    };
+  }
+}
+
 async function getAllUsers() {
   try {
     const result = await db.query(QUERY_STRING.GET_ALL_USER);
@@ -138,5 +156,6 @@ module.exports = {
   getUsersPaginated, 
   updateUser, 
   deleteUser, 
-  bulkInsert 
+  bulkInsert,
+  getOperator, 
 };

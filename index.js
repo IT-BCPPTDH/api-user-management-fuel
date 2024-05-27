@@ -2,6 +2,7 @@
 const uWS = require('uWebSockets.js');
 const userRoutes = require('./routes/user-routes');
 const authRoutes = require('./routes/auth-routes');
+const masterRoutes = require('./routes/master-routes');
 const websocketRoute = require('./routes/websocket-route')
 const port = 9001;
 const app = uWS.App();
@@ -34,6 +35,9 @@ userRoutes(app);
 
 // Use authentication routes
 authRoutes(app);
+
+// Use authentication routes
+masterRoutes(app);
 
 // WebSocket route 
 websocketRoute(app)
