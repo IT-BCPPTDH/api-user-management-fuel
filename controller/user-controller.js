@@ -203,5 +203,6 @@ module.exports = {
   deleteUser, 
   bulkInsert,
   getOperator, 
-  updateRoles
+  updateRoles,
+  getRoles
 };
