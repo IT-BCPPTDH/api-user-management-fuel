@@ -14,7 +14,7 @@ app.options('/*', (res, req) => {
   res.writeHeader('Access-Control-Allow-Origin', '*');
   res.writeHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.writeHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.writeHeader('Access-Control-Allow-Credentials', 'true');
+  res.writeHeader('Access-Control-Allow-Cedentials', 'true');
 
   res.onAborted(() => {
     res.aborted = true;

@@ -12,7 +12,8 @@ const QUERY_STRING = {
     LOG_AUTH_SUCCESS: `INSERT INTO "users_authenticationLogs" (user_id, status, log_timestamp) VALUES ($1, 'success', NOW());`,
     LOG_AUTH_FAILED: `INSERT INTO "users_authenticationLogs" (user_id, status, log_timestamp) VALUES (NULL, 'failure', NOW());`,
     USER_LOGOUT: `DELETE FROM "users_sessionTokens" WHERE user_id = $1 AND token = $2;`,
-    RESET_PASS: 'SELECT public.reset_password($1, $2)'
+    RESET_PASS: 'SELECT public.reset_password($1, $2)',
+    GET_USER_ROLE_BY_ID: 'SELECT * FROM users_roles WHERE id = $1'
 }
 
 module.exports = {

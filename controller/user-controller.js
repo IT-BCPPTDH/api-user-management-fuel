@@ -46,6 +46,23 @@ async function getUser(userId) {
   }
 }
 
+async function getRoles(userId) {
+  try {
+    const result = await db.query(QUERY_STRING.GET_USER_ROLE_BY_ID, [userId]);
+    return {
+      success: true,
+      status: HTTP_STATUS.OK,
+      data: result.rows[0]
+    }
+  } catch (error) {
+    return {
+      success: false,
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.FAILED_GET_USER} ${error}`,
+    };
+  }
+}
+
 async function getOperator() {
   try {
     const result = await db.query(QUERY_STRING.GET_MASTER_OPERATOR, ['Operator']);
@@ -149,6 +166,34 @@ async function bulkInsert(){
   }
 }
 
+async function updateRoles(updatedData) {
+  try {
+    console.log(updatedData)
+    const { user_id, ...fieldsToUpdate } = updatedData;
+    const columns = Object.keys(fieldsToUpdate);
+    const values = Object.values(fieldsToUpdate);
+    const setClause = columns.map((col, i) => `${col} = $${i + 1}`).join(', ');
+    console.log(setClause)
+
+    const params = `UPDATE users_roles SET ${setClause} WHERE user_id = $${columns.length + 1}`
+
+    values.push(user_id);
+    await db.query(params, values)
+
+    const user = await getUser(updatedData.userId); 
+
+    return {
+      status: HTTP_STATUS.OK,
+      message: STATUS_MESSAGE.SUCCESS_UPDATE_USER
+    }
+  } catch (error) {
+    return {
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.ERR_UPDATE_USER} ${error}`,
+    };
+  }
+}
+
 module.exports = { 
   createUser, 
   getUser, 
@@ -158,4 +203,5 @@ module.exports = {
   deleteUser, 
   bulkInsert,
   getOperator, 
+  updateRoles
 };

@@ -7,6 +7,7 @@ module.exports = (app) => {
   app.get('/api-user/get-all', (res, req) => userHandler.handleUserRetrievalAll(res, req));
   app.get('/api-user/paginate/:pageNum/:pageSize', (res, req) => userHandler.handleUserPagination(res, req));
   app.put('/api-user/update/:userId', (res, req) => userHandler.handleUserUpdate(res, req));
+  app.put('/api-user/update-roles', (res, req) => userHandler.handleRolesUpdate(res, req));
   app.del('/api-user/delete/:userId', (res, req) => userHandler.handleUserDeletion(res, req));
   app.get('/api-user/bulk-insert', (res, req) => userHandler.handleInsertBulkUser(res,req))
 };
