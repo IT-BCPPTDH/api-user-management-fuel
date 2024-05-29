@@ -3,7 +3,7 @@ const uWS = require('uWebSockets.js');
 const userRoutes = require('./routes/user-routes');
 const authRoutes = require('./routes/auth-routes');
 const websocketRoute = require('./routes/websocket-route')
-const port = 9001;
+const port = 9002;
 const app = uWS.App();
 
 // Cors Setup
@@ -11,7 +11,7 @@ app.options('/*', (res, req) => {
   res.writeHeader('Access-Control-Allow-Origin', '*');
   res.writeHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.writeHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.writeHeader('Access-Control-Allow-Credentials', 'true');
+  res.writeHeader('Access-Control-Allow-Cedentials', 'true');
 
   res.onAborted(() => {
     res.aborted = true;

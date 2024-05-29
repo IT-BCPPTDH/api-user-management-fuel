@@ -5,7 +5,8 @@ const {
     updateUser, 
     deleteUser, 
     getUsersPaginated, 
-    bulkInsert
+    bulkInsert,
+    updateRoles
 } = require('../controller/user-controller.js');
 
 const { handleResponseJson, handleResponseParams } = require('./response-handler.js')
@@ -38,6 +39,10 @@ async function handleUserRetrievalAll(res, req) {
     await handleResponseParams(res, req, getAllUsers, 0)
 }
 
+async function handleRolesUpdate(res, req) {
+    await handleResponseJson(res, req, updateRoles,1);
+}
+
 module.exports = {
     handleUserCreation,
     handleUserUpdate,
@@ -45,5 +50,6 @@ module.exports = {
     handleUserRetrieval,
     handleUserPagination,
     handleInsertBulkUser,
-    handleUserRetrievalAll
+    handleUserRetrievalAll,
+    handleRolesUpdate
 };
