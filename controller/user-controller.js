@@ -134,6 +134,7 @@ async function bulkInsert(){
 async function getOperator() {
   try {
     const result = await db.query(QUERY_STRING.GET_MASTER_OPERATOR);
+    console.log(result)
     return {
       success: true,
       status: HTTP_STATUS.OK,
@@ -141,6 +142,7 @@ async function getOperator() {
       totalRow: result.rows.length
     }
   } catch (error) {
+    console.log(error)
     return {
       success: false,
       status: HTTP_STATUS.BAD_REQUEST,
