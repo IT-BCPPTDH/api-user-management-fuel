@@ -2,8 +2,11 @@
 const uWS = require('uWebSockets.js');
 const userRoutes = require('./routes/user-routes');
 const authRoutes = require('./routes/auth-routes');
-const websocketRoute = require('./routes/websocket-route')
-const port = 9002;
+const masterRoutes = require('./routes/master-routes');
+const websocketRoute = require('./routes/websocket-route');
+require('dotenv').config();
+
+const port = process.env.PORT;
 const app = uWS.App();
 
 // Cors Setup
@@ -34,6 +37,9 @@ userRoutes(app);
 
 // Use authentication routes
 authRoutes(app);
+
+// Use authentication routes
+masterRoutes(app);
 
 // WebSocket route 
 websocketRoute(app)

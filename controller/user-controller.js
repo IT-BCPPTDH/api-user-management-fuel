@@ -63,6 +63,24 @@ async function getRoles(userId) {
   }
 }
 
+async function getOperator() {
+  try {
+    const result = await db.query(QUERY_STRING.GET_MASTER_OPERATOR, ['Operator']);
+    return {
+      success: true,
+      status: HTTP_STATUS.OK,
+      data: result.rows,
+      totalRow: result.rows.length
+    }
+  } catch (error) {
+    return {
+      success: false,
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.FAILED_GET_USER} ${error}`,
+    };
+  }
+}
+
 async function getAllUsers() {
   try {
     const result = await db.query(QUERY_STRING.GET_ALL_USER);
@@ -139,7 +157,7 @@ async function bulkInsert(){
   for (let index = 0; index < userJson.length; index++) {
     const element = userJson[index];
     const inserted = await createUser(element)
-    console.log(inserted)
+    // console.log(inserted)
   }
 
   return {
@@ -184,6 +202,6 @@ module.exports = {
   updateUser, 
   deleteUser, 
   bulkInsert,
-  getRoles,
-  updateRoles 
+  getOperator, 
+  updateRoles
 };

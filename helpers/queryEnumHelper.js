@@ -1,6 +1,7 @@
 const QUERY_STRING = {
     CREATE_USER : 'SELECT public.create_user($1, $2, $3, $4, $5)',
     GET_USER_BY_ID: 'SELECT * FROM user_view WHERE id = $1',
+    GET_MASTER_OPERATOR: 'SELECT * FROM user_view WHERE position = $1',
     GET_ALL_USER: 'SELECT * FROM user_view',
     GET_USER_PAGINATED: 'SELECT * FROM public.get_users_paginated($1, $2)',
     UPDATE_USER: 'SELECT update_user($1, $2, $3, $4, $5)',
