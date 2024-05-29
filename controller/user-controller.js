@@ -133,7 +133,7 @@ async function bulkInsert(){
 
 async function getOperator() {
   try {
-    const result = await db.query(QUERY_STRING.GET_MASTER_OPERATOR, ['Operator']);
+    const result = await db.query(QUERY_STRING.GET_MASTER_OPERATOR);
     return {
       success: true,
       status: HTTP_STATUS.OK,

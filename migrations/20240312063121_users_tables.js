@@ -5,10 +5,10 @@
 exports.up = function (knex) {
     return knex.schema.createTable('users', function (table) {
         table.increments('id').primary();
-        table.string('JDE');
-        table.string('fullname');
-        table.string('position');
-        table.string('division');
+        table.string('JDE').index();
+        table.string('fullname').index();
+        table.string('position').index();
+        table.string('division').index();
         table.timestamp('created_at').defaultTo(knex.fn.now()).notNullable();
         table.timestamp('updated_at').defaultTo(knex.fn.now()).notNullable();
     });
