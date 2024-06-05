@@ -194,6 +194,23 @@ async function updateRoles(updatedData) {
   }
 }
 
+async function getUserJDE(arrayData) {
+  try {
+    const result = await db.query(QUERY_STRING.GET_USER_BY_JDE, [arrayData]);
+    return {
+      success: true,
+      status: HTTP_STATUS.OK,
+      data: result.rows
+    }
+  } catch (error) {
+    return {
+      success: false,
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.FAILED_GET_USER} ${error}`,
+    };
+  }
+}
+
 module.exports = { 
   createUser, 
   getUser, 
@@ -203,5 +220,7 @@ module.exports = {
   deleteUser, 
   bulkInsert,
   getOperator, 
-  updateRoles
+  updateRoles,
+  getRoles,
+  getUserJDE
 };
