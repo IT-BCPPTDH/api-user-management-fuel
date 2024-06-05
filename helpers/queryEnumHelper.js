@@ -1,7 +1,7 @@
 const QUERY_STRING = {
     CREATE_USER : 'SELECT public.create_user($1, $2, $3, $4, $5)',
     GET_USER_BY_ID: 'SELECT * FROM user_view WHERE id = $1',
-    GET_MASTER_OPERATOR: 'SELECT * FROM user_view WHERE position = $1',
+    GET_MASTER_OPERATOR: 'SELECT * FROM user_operator',
     GET_ALL_USER: 'SELECT * FROM user_view',
     GET_USER_PAGINATED: 'SELECT * FROM public.get_users_paginated($1, $2)',
     UPDATE_USER: 'SELECT update_user($1, $2, $3, $4, $5)',
@@ -16,7 +16,10 @@ const QUERY_STRING = {
     GET_USER_ROLE_BY_ID: 'SELECT * FROM users_roles WHERE id = $1',
 
     GET_USER_JDE: 'SELECT * FROM public.get_user_jde($1)',
-    GET_USER_BY_JDE: 'SELECT "JDE", fullname FROM public.users WHERE fullname LIKE ANY ($1)'
+    GET_USER_BY_JDE: 'SELECT "JDE", fullname FROM public.users WHERE fullname LIKE ANY ($1)',
+    GET_USER_ROLE_BY_ID: 'SELECT * FROM users_roles WHERE user_id = $1',
+    INSERT_USER_ROLE: `INSERT INTO "users_roles" (user_id, breakdown, production, timeentry, coalhauling, weather) VALUES 
+    ($1, $2, $3, $4, $5, $6, NOW(), NOW())`
 }
 
 module.exports = {
