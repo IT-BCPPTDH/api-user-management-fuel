@@ -11,6 +11,7 @@ exports.up = function(knex) {
         table.boolean('timeentry').defaultTo(false).notNullable();
         table.boolean('coalhauling').defaultTo(false).notNullable();
         table.boolean('weather').defaultTo(false).notNullable();
+        table.boolean('admin').defaultTo(false).notNullable();
         table.timestamp('created_at').defaultTo(knex.fn.now()).notNullable();
         table.timestamp('updated_at').defaultTo(knex.fn.now()).notNullable();
     });
