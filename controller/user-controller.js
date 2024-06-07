@@ -176,11 +176,11 @@ async function updateRoles(updatedData) {
     const setClause = columns.map((col, i) => `${col} = $${i + 1}`).join(', ');
 
     const updateQuery = `UPDATE users_roles SET ${setClause} WHERE user_id = $${columns.length + 1}`;
-    values.push(user_id);  // user_id as the last value for the update query
+    values.push(user_id);  
 
     const res = await db.query(updateQuery, values);
 
-    if (res.rowCount === 0) {  // Check for no rows affected
+    if (res.rowCount === 0) {  
       const insertColumns = ['user_id', ...columns];
       const insertValues = [user_id, ...values.slice(0, values.length - 1)];
       const insertPlaceholders = insertColumns.map((_, i) => `$${i + 1}`).join(', ');
@@ -190,7 +190,7 @@ async function updateRoles(updatedData) {
       await db.query(insertQuery, insertValues);
     }
 
-    const user = await getUser(user_id); // Ensure the correct variable is used
+    const user = await getUser(user_id); 
 
     return {
       status: HTTP_STATUS.OK,
