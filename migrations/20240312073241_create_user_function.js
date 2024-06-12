@@ -35,6 +35,10 @@ exports.up = function (knex) {
         -- Insert the user credentials into the Users_Credentials table
         INSERT INTO "users_credentials" (user_id, password_hash, created_at, updated_at)
         VALUES (created_id, p_password_hash, NOW(), NOW());
+
+        -- Insert default roles for the user into the Users_Roles table
+        INSERT INTO "users_roles" (user_id, breakdown, production, timeentry, coalhauling, created_at, updated_at)
+        VALUES (created_id, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NOW(), NOW());
     
         RETURN created_id; -- Return the generated ID
       ELSE

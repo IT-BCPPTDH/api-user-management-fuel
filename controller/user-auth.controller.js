@@ -1,6 +1,6 @@
 const db = require('../database/helper');
 const { encrypter, decrypter } = require('../helpers/bcryptHelper')
-const { getUser } = require('./user-controller')
+const { getUser, getRoles } = require('./user-controller')
 const { HTTP_STATUS, STATUS_MESSAGE } = require('../helpers/enumHelper')
 const { QUERY_STRING } = require('../helpers/queryEnumHelper')
 
@@ -34,11 +34,13 @@ async function authUser(user) {
 
       const activeSession = await hasActiveSession(user_id);
       const user = await getUser(user_id)
+      const item = await getRoles(user_id)
 
       if (activeSession) {
 
         return {
           data: user.success ? user.data : {},
+          access: user.success? item.data : {}, 
           session_token: activeSession.token,
           status: HTTP_STATUS.CREATED,
           message: STATUS_MESSAGE.USER_LOGGEDIN

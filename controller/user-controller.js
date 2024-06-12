@@ -46,24 +46,6 @@ async function getUser(userId) {
   }
 }
 
-async function getOperator() {
-  try {
-    const result = await db.query(QUERY_STRING.GET_MASTER_OPERATOR, ['Operator']);
-    return {
-      success: true,
-      status: HTTP_STATUS.OK,
-      data: result.rows,
-      totalRow: result.rows.length
-    }
-  } catch (error) {
-    return {
-      success: false,
-      status: HTTP_STATUS.BAD_REQUEST,
-      message: `${STATUS_MESSAGE.FAILED_GET_USER} ${error}`,
-    };
-  }
-}
-
 async function getAllUsers() {
   try {
     const result = await db.query(QUERY_STRING.GET_ALL_USER);
@@ -149,6 +131,97 @@ async function bulkInsert(){
   }
 }
 
+async function getOperator() {
+  try {
+    const result = await db.query(QUERY_STRING.GET_MASTER_OPERATOR);
+    
+    return {
+      success: true,
+      status: HTTP_STATUS.OK,
+      data: result.rows,
+      totalRow: result.rows.length
+    }
+  } catch (error) {
+    console.log(error)
+    return {
+      success: false,
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.FAILED_GET_USER} ${error}`,
+    };
+  }
+}
+
+async function getRoles(userId) {
+  try {
+    const result = await db.query(QUERY_STRING.GET_USER_ROLE_BY_ID, [userId]);
+    return {
+      success: true,
+      status: HTTP_STATUS.OK,
+      data: result.rows[0]
+    }
+  } catch (error) {
+    return {
+      success: false,
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.FAILED_GET_USER} ${error}`,
+    };
+  }
+}
+
+async function updateRoles(updatedData) {
+  try {
+    const { user_id, ...fieldsToUpdate } = updatedData;
+    const columns = Object.keys(fieldsToUpdate);
+    const values = Object.values(fieldsToUpdate);
+    const setClause = columns.map((col, i) => `${col} = $${i + 1}`).join(', ');
+
+    const updateQuery = `UPDATE users_roles SET ${setClause} WHERE user_id = $${columns.length + 1}`;
+    values.push(user_id);  
+
+    const res = await db.query(updateQuery, values);
+
+    if (res.rowCount === 0) {  
+      const insertColumns = ['user_id', ...columns];
+      const insertValues = [user_id, ...values.slice(0, values.length - 1)];
+      const insertPlaceholders = insertColumns.map((_, i) => `$${i + 1}`).join(', ');
+
+      const insertQuery = `INSERT INTO users_roles (${insertColumns.join(', ')}) VALUES (${insertPlaceholders})`;
+      
+      await db.query(insertQuery, insertValues);
+    }
+
+    const user = await getUser(user_id); 
+
+    return {
+      status: HTTP_STATUS.OK,
+      message: STATUS_MESSAGE.SUCCESS_UPDATE_USER
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.ERR_UPDATE_USER} ${error.message}`,
+    };
+  }
+}
+
+async function getUserJDE(arrayData) {
+  try {
+    const result = await db.query(QUERY_STRING.GET_USER_BY_JDE, [arrayData]);
+    return {
+      success: true,
+      status: HTTP_STATUS.OK,
+      data: result.rows
+    }
+  } catch (error) {
+    return {
+      success: false,
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.FAILED_GET_USER} ${error}`,
+    };
+  }
+}
+
 module.exports = { 
   createUser, 
   getUser, 
@@ -158,4 +231,7 @@ module.exports = {
   deleteUser, 
   bulkInsert,
   getOperator, 
+  updateRoles,
+  getRoles,
+  getUserJDE
 };

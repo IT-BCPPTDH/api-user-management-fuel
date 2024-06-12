@@ -22,6 +22,10 @@ exports.up = function (knex) {
           -- Delete the corresponding entry from the Users_Credentials table
           DELETE FROM "users_credentials"
           WHERE user_id = p_user_id;
+
+          -- Delete the corresponding entry from the Users_Credentials table
+          DELETE FROM "users_roles"
+          WHERE user_id = p_user_id;
   
           -- Delete the user from the Users table
           DELETE FROM "users"

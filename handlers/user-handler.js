@@ -6,7 +6,9 @@ const {
     deleteUser, 
     getUsersPaginated, 
     bulkInsert,
-    getOperator
+    updateRoles,
+    getOperator,
+    getUserJDE
 } = require('../controller/user-controller.js');
 
 const { handleResponseJson, handleResponseParams } = require('./response-handler.js')
@@ -39,8 +41,16 @@ async function handleUserRetrievalAll(res, req) {
     await handleResponseParams(res, req, getAllUsers, 0)
 }
 
+async function handleRolesUpdate(res, req) {
+    await handleResponseJson(res, req, updateRoles);
+}
+
 async function handleMasterOperator(res, req) {
     await handleResponseParams(res, req, getOperator, 0)
+}
+
+async function handleFetchJde(res, req) {
+    await handleResponseJson(res, req, getUserJDE, 0)
 }
 
 module.exports = {
@@ -51,5 +61,7 @@ module.exports = {
     handleUserPagination,
     handleInsertBulkUser,
     handleUserRetrievalAll,
-    handleMasterOperator
+    handleRolesUpdate,
+    handleMasterOperator,
+    handleFetchJde
 };

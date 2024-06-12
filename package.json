@@ -6,6 +6,7 @@
   "scripts": {
     "migrate:latest": "knex migrate:latest",
     "migrate:rollback": "knex migrate:rollback",
+    "seed:run":"knex seed:run",
     "start": "node_modules/.bin/nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
