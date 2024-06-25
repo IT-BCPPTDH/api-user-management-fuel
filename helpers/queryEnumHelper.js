@@ -15,6 +15,8 @@ const QUERY_STRING = {
     RESET_PASS: 'SELECT public.reset_password($1, $2)',
     GET_USER_ROLE_BY_ID: 'SELECT * FROM users_roles WHERE id = $1',
 
+    GET_ALL_USER_ROLES: 'SELECT * FROM users_roles',
+
     GET_USER_JDE: 'SELECT * FROM public.get_user_jde($1)',
     GET_USER_BY_JDE: 'SELECT "JDE", fullname FROM public.users WHERE fullname LIKE ANY ($1)',
     GET_USER_ROLE_BY_ID: 'SELECT * FROM users_roles WHERE user_id = $1',

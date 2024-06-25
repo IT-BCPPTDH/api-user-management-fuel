@@ -8,7 +8,9 @@ const {
     bulkInsert,
     updateRoles,
     getOperator,
-    getUserJDE
+    getUserJDE,
+    updateOperator,
+    getAllRoles
 } = require('../controller/user-controller.js');
 
 const { handleResponseJson, handleResponseParams } = require('./response-handler.js')
@@ -53,6 +55,14 @@ async function handleFetchJde(res, req) {
     await handleResponseJson(res, req, getUserJDE, 0)
 }
 
+async function handleUserUpdate(res, req) {
+    await handleResponseJson(res, req, updateOperator, 0)
+}
+
+async function handleUserRolesAll(res, req) {
+    await handleResponseParams(res, req, getAllRoles, 0)
+}
+
 module.exports = {
     handleUserCreation,
     handleUserUpdate,
@@ -63,5 +73,7 @@ module.exports = {
     handleUserRetrievalAll,
     handleRolesUpdate,
     handleMasterOperator,
-    handleFetchJde
+    handleFetchJde,
+    handleUserUpdate,
+    handleUserRolesAll
 };
