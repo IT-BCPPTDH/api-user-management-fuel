@@ -190,10 +190,11 @@ async function updateRoles(updatedData) {
       await db.query(insertQuery, insertValues);
     }
 
-    const user = await getUser(user_id); 
+    const dataRole = await getRoles(user_id)
 
     return {
       status: HTTP_STATUS.OK,
+      data: dataRole.success ? dataRole.data : {},
       message: STATUS_MESSAGE.SUCCESS_UPDATE_USER
     };
   } catch (error) {
@@ -222,6 +223,56 @@ async function getUserJDE(arrayData) {
   }
 }
 
+async function updateOperator(arrayData){
+  try {
+    const { id, jde, fullname, position, division, ...rest1 } = arrayData;
+    const userIdToDivision = { userId: id, jde, fullname, position, division };
+
+    const { breakdown, admin, timeentry, production, coalhauling, weather } = rest1;
+    const userIdToBreakdownAndAdmin = {user_id:id, breakdown, admin, timeentry, production, coalhauling, weather };
+
+    const editUser = await updateUser(userIdToDivision)
+    const editRoles = await updateRoles(userIdToBreakdownAndAdmin)
+
+    let combinedData;
+    if(editUser){
+      combinedData = {
+        data: {
+          ...editUser.data,
+          ...editRoles.data
+        }
+      };
+    }
+
+    return {
+      status: HTTP_STATUS.OK,
+      data : combinedData,
+      message: STATUS_MESSAGE.SUCCESS_UPDATE_USER
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.ERR_UPDATE_USER} ${error.message}`,
+    };
+  }
+}
+
+async function getAllRoles() {
+  try {
+    const result = await db.query(QUERY_STRING.GET_ALL_USER_ROLES);
+    return {
+      status: HTTP_STATUS.OK,
+      data: result.rows
+    }
+  } catch (error) {
+    return {
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.FAILED_GET_ALL_USER} ${error}`,
+    };
+  }
+}
+
 module.exports = { 
   createUser, 
   getUser, 
@@ -233,5 +284,7 @@ module.exports = {
   getOperator, 
   updateRoles,
   getRoles,
-  getUserJDE
+  getUserJDE,
+  updateOperator,
+  getAllRoles
 };

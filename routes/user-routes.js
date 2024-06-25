@@ -11,4 +11,6 @@ module.exports = (app) => {
   app.del('/api-user/delete/:userId', (res, req) => userHandler.handleUserDeletion(res, req));
   app.get('/api-user/bulk-insert', (res, req) => userHandler.handleInsertBulkUser(res,req))
   app.post('/api-user/get-jde', (res, req) => userHandler.handleFetchJde(res,req))
+  app.put('/api-user/update-data', (res, req) => userHandler.handleUserUpdate(res, req));
+  app.get('/api-user/get-all-roles', (res, req) => userHandler.handleUserRolesAll(res, req));
 };
