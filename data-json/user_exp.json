@@ -1,0 +1,28 @@
+[
+    {
+        "JDE": 120020,
+        "fullname": "Aan Solihin",
+        "position": "Fuel Foreman",
+        "division": "Warehouse"
+    },
+    {
+        "JDE": "255524",
+        "fullname": "Heri Ristanto",
+        "position": "BCP1",
+        "division": "",
+        "fuelman": true
+    },
+    {
+        "JDE": "DEV101",
+        "fullname": "TES THINKMATCH",
+        "position": "TESTER THINKMATCH",
+        "division": "IT",
+        "production": true,
+        "breakdown": true,
+        "timeentry": true,
+        "coalhauling": true,
+        "weather": true,
+        "admin": true,
+        "fuelman": true
+    }
+]

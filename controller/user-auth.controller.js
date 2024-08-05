@@ -3,6 +3,7 @@ const { encrypter, decrypter } = require('../helpers/bcryptHelper')
 const { getUser, getRoles } = require('./user-controller')
 const { HTTP_STATUS, STATUS_MESSAGE } = require('../helpers/enumHelper')
 const { QUERY_STRING } = require('../helpers/queryEnumHelper')
+const { client } = require('../helpers/redisHelper')
 
 function generateSessionToken() {
   const tokenLength = 32;
@@ -38,6 +39,8 @@ async function authUser(user) {
 
       if (activeSession) {
 
+        client.set(activeSession.token,JSON.stringify(user.data))
+
         return {
           data: user.success ? user.data : {},
           access: user.success? item.data : {}, 
@@ -50,8 +53,11 @@ async function authUser(user) {
         await saveSessionToken(user_id, session_token);
         await logAuthenticationSuccess(user_id);
 
+        client.set(session_token,JSON.stringify(user.data))
+
         return {
           data: user.success ? user.data : {},
+          access: user.success? item.data : {}, 
           session_token: session_token,
           status: HTTP_STATUS.OK,
           message: STATUS_MESSAGE.SUCCESS_LOGIN
@@ -102,6 +108,7 @@ async function logoutUser(user) {
 
     if (deleteSessionResult && deleteSessionResult.rowCount > 0) {
 
+      client.del(user.session_token)
       return {
         status: HTTP_STATUS.OK,
         message: STATUS_MESSAGE.SUCCESS_LOGOUT,

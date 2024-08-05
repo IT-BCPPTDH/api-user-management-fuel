@@ -6,7 +6,7 @@
   "scripts": {
     "migrate:latest": "knex migrate:latest",
     "migrate:rollback": "knex migrate:rollback",
-    "seed:run":"knex seed:run",
+    "seed:run": "knex seed:run",
     "start": "node_modules/.bin/nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,6 +20,7 @@
     "dotenv": "^16.4.5",
     "knex": "^3.1.0",
     "pg": "^8.11.3",
+    "redis": "^4.7.0",
     "uWebSockets.js": "uNetworking/uWebSockets.js#v20.41.0"
   },
   "devDependencies": {
