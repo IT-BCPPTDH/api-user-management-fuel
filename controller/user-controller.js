@@ -1,6 +1,7 @@
 const db = require('../database/helper');
 const {encrypter} = require('../helpers/bcryptHelper')
-const userJson = require('../data-json/user-ptdh.json')
+// const userJson = require('../data-json/user-ptdh.json')
+const userJson = require('../data-json/user_example.json')
 const { HTTP_STATUS, STATUS_MESSAGE } = require('../helpers/enumHelper')
 const { QUERY_STRING } = require('../helpers/queryEnumHelper')
 
@@ -10,11 +11,31 @@ async function createUser(userData) {
   const password_hash = encrypter(password);
 
   try {
-    const inserted = await db.query(QUERY_STRING.CREATE_USER,
+    let inserted = await db.query(QUERY_STRING.CREATE_USER,
       [newUser.JDE, newUser.fullname, newUser.position, newUser.division, password_hash]);
 
     if (inserted) {
       const user = await getUser(inserted.rows[0].create_user)
+      const { JDE, fullname, position, division, ...remainingFields } = userData;
+      if (remainingFields && Object.keys(remainingFields).length > 0) {
+        const userId = user.data.id
+        const setClauses = Object.keys(remainingFields)
+        .map((field, index) => {
+          const columnName = `${field}`;
+          return `${columnName} = $${index + 1}`;
+        })
+        .join(', ');
+      
+        const values = Object.keys(remainingFields)
+          .map(field => remainingFields[field]);
+      
+        values.push(userId);
+
+        const query = `UPDATE users_roles SET ${setClauses} WHERE id = $${values.length}`;
+        const result = await db.query(query, values)
+
+      }
+  
       return {
         status: HTTP_STATUS.OK,
         message: STATUS_MESSAGE.SUCCESS_CREATE_USER,
@@ -122,7 +143,6 @@ async function bulkInsert(){
   for (let index = 0; index < userJson.length; index++) {
     const element = userJson[index];
     const inserted = await createUser(element)
-    // console.log(inserted)
   }
 
   return {
