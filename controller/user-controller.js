@@ -1,7 +1,7 @@
 const db = require('../database/helper');
 const {encrypter} = require('../helpers/bcryptHelper')
 // const userJson = require('../data-json/user-ptdh.json')
-const userJson = require('../data-json/user_example.json')
+const userJson = require('../data-json/user-example.json')
 const { HTTP_STATUS, STATUS_MESSAGE } = require('../helpers/enumHelper')
 const { QUERY_STRING } = require('../helpers/queryEnumHelper')
 
