@@ -10,7 +10,8 @@ const {
     getOperator,
     getUserJDE,
     updateOperator,
-    getAllRoles
+    getAllRoles,
+    updateExistingRole
 } = require('../controller/user-controller.js');
 
 const { handleResponseJson, handleResponseParams } = require('./response-handler.js')
@@ -63,6 +64,10 @@ async function handleUserRolesAll(res, req) {
     await handleResponseParams(res, req, getAllRoles, 0)
 }
 
+async function handleUserUpdateExisting(res, req) {
+    await handleResponseParams(res, req, updateExistingRole, 0)
+}
+
 module.exports = {
     handleUserCreation,
     handleUserUpdate,
@@ -75,5 +80,6 @@ module.exports = {
     handleMasterOperator,
     handleFetchJde,
     handleUserUpdate,
-    handleUserRolesAll
+    handleUserRolesAll,
+    handleUserUpdateExisting
 };
