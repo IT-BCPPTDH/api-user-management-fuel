@@ -1,7 +1,9 @@
 const db = require('../database/helper');
 const {encrypter} = require('../helpers/bcryptHelper')
+const roleData = require('../data-json/user_role.json')
 // const userJson = require('../data-json/user-ptdh.json')
 const userJson = require('../data-json/user-example.json')
+
 const { HTTP_STATUS, STATUS_MESSAGE } = require('../helpers/enumHelper')
 const { QUERY_STRING } = require('../helpers/queryEnumHelper')
 
@@ -15,27 +17,7 @@ async function createUser(userData) {
       [newUser.JDE, newUser.fullname, newUser.position, newUser.division, password_hash]);
 
     if (inserted) {
-      const user = await getUser(inserted.rows[0].create_user)
-      const { JDE, fullname, position, division, ...remainingFields } = userData;
-      if (remainingFields && Object.keys(remainingFields).length > 0) {
-        const userId = user.data.id
-        const setClauses = Object.keys(remainingFields)
-        .map((field, index) => {
-          const columnName = `${field}`;
-          return `${columnName} = $${index + 1}`;
-        })
-        .join(', ');
-      
-        const values = Object.keys(remainingFields)
-          .map(field => remainingFields[field]);
-      
-        values.push(userId);
-
-        const query = `UPDATE users_roles SET ${setClauses} WHERE id = $${values.length}`;
-        const result = await db.query(query, values)
-
-      }
-  
+      const user = await getUser(inserted.rows[0].create_user)  
       return {
         status: HTTP_STATUS.OK,
         message: STATUS_MESSAGE.SUCCESS_CREATE_USER,
@@ -293,6 +275,41 @@ async function getAllRoles() {
   }
 }
 
+async function updateExistingRole(){
+  try{
+    if (!roleData || typeof roleData !== 'object') {
+      console.error('Data is missing or invalid');
+      return;
+    }
+
+    for (const [column, jde] of Object.entries(roleData)) {
+      
+      if (!Array.isArray(jde) || jde.length === 0) {
+          console.warn(`No valid entries for column: ${column}`);
+          continue;
+      }
+      const placeholders = jde.map((_, index) => `$${index + 1}`).join(', ');
+      const updateQuery = `
+          UPDATE users_roles
+          SET ${column} = true
+          FROM users as u
+          WHERE u.id = users_roles.user_id
+          AND u."JDE" IN (${placeholders});
+      `;
+      await db.query(updateQuery, jde);
+    }
+    return {
+      status: HTTP_STATUS.OK,
+      message: STATUS_MESSAGE.SUCCESS_UPDATE_USER
+    }
+  }catch(error){
+    return {
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.ERR_UPDATE_USER} ${error}`,
+    };
+  }
+}
+
 module.exports = { 
   createUser, 
   getUser, 
@@ -306,5 +323,6 @@ module.exports = {
   getRoles,
   getUserJDE,
   updateOperator,
-  getAllRoles
+  getAllRoles,
+  updateExistingRole
 };

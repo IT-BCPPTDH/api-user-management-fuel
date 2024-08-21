@@ -13,4 +13,5 @@ module.exports = (app) => {
   app.post('/api-user/get-jde', (res, req) => userHandler.handleFetchJde(res,req))
   app.put('/api-user/update-data', (res, req) => userHandler.handleUserUpdate(res, req));
   app.get('/api-user/get-all-roles', (res, req) => userHandler.handleUserRolesAll(res, req));
+  app.get('/api-user/get-existing-roles', (res, req) => userHandler.handleUserUpdateExisting(res, req));
 };
