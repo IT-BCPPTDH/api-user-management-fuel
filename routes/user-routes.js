@@ -14,4 +14,7 @@ module.exports = (app) => {
   app.put('/api-user/update-data', (res, req) => userHandler.handleUserUpdate(res, req));
   app.get('/api-user/get-all-roles', (res, req) => userHandler.handleUserRolesAll(res, req));
   app.get('/api-user/get-existing-roles', (res, req) => userHandler.handleUserUpdateExisting(res, req));
+  app.get('/api-user/get-user-fuel', (res, req) => userHandler.handleGetUserFuel(res, req));
+  app.post('/api-user/add-user-role', (res, req) => userHandler.handleAddUserAndRole(res, req));
+  app.put('/api-user/update-fuel-employee', (res, req) => userHandler.handleFuelEmployee(res, req));
 };

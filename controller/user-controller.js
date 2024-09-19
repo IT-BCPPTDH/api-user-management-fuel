@@ -310,6 +310,84 @@ async function updateExistingRole(){
   }
 }
 
+async function getUserFuel() {
+  try {
+    const result = await db.query(QUERY_STRING.GET_USER_FUEL);
+    return {
+      status: HTTP_STATUS.OK,
+      data: result.rows
+    }
+  } catch (error) {
+    return {
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.FAILED_GET_ALL_USER} ${error}`,
+    };
+  }
+}
+
+async function createUserAndRole(userData) {
+  const newUser = { ...userData };
+  const password = newUser.password ? newUser.password : "abcd1234"
+  const password_hash = encrypter(password);
+
+  try {
+    let inserted = await db.query(QUERY_STRING.CREATE_USER,
+      [newUser.JDE, newUser.fullname, newUser.position, newUser.division, password_hash]);
+    
+    if (inserted) {
+      const user = await getUser(inserted.rows[0].create_user)
+      const { fuelman, admin_fuel, ...rest } = userData;
+      const newData = {user_id:user.data.id, ...(fuelman !== undefined && { fuelman }), ...(admin_fuel !== undefined && { admin_fuel })};
+
+      await updateRoles(newData)
+      return {
+        status: HTTP_STATUS.OK,
+        message: STATUS_MESSAGE.SUCCESS_CREATE_USER,
+        data: user.success ? user.data : {}
+      };
+    }
+  } catch (error) {
+    return {
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.ERR_CREATE_USER} ${error}`,
+    };
+  }
+}
+
+async function updateFuelman(arrayData){
+  try {
+    const { id, jde, fullname, position, division, ...rest1 } = arrayData;
+    const userIdToDivision = { userId: id, JDE:jde, fullname, position, division };
+
+    const { fuelman, admin_fuel } = rest1;
+    const userIdToBreakdownAndAdmin = {user_id:id, fuelman, admin_fuel };
+
+    const editUser = await updateUser(userIdToDivision)
+    const editRoles = await updateRoles(userIdToBreakdownAndAdmin)
+
+    let combinedData;
+    if(editUser){
+      combinedData = {
+        data: {
+          ...editUser.data,
+          ...editRoles.data
+        }
+      };
+    }
+
+    return {
+      status: HTTP_STATUS.OK,
+      message: STATUS_MESSAGE.SUCCESS_UPDATE_USER
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.ERR_UPDATE_USER} ${error.message}`,
+    };
+  }
+}
+
 module.exports = { 
   createUser, 
   getUser, 
@@ -324,5 +402,8 @@ module.exports = {
   getUserJDE,
   updateOperator,
   getAllRoles,
-  updateExistingRole
+  updateExistingRole,
+  getUserFuel,
+  createUserAndRole,
+  updateFuelman
 };
