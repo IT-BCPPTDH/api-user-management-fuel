@@ -11,7 +11,10 @@ const {
     getUserJDE,
     updateOperator,
     getAllRoles,
-    updateExistingRole
+    updateExistingRole,
+    getUserFuel,
+    createUserAndRole,
+    updateFuelman
 } = require('../controller/user-controller.js');
 
 const { handleResponseJson, handleResponseParams } = require('./response-handler.js')
@@ -68,6 +71,18 @@ async function handleUserUpdateExisting(res, req) {
     await handleResponseParams(res, req, updateExistingRole, 0)
 }
 
+async function handleGetUserFuel(res, req) {
+    await handleResponseParams(res, req, getUserFuel, 0)
+}
+
+async function handleAddUserAndRole(res, req) {
+    await handleResponseJson(res, req, createUserAndRole)
+}
+
+async function handleFuelEmployee(res, req) {
+    await handleResponseJson(res, req, updateFuelman, 0)
+}
+
 module.exports = {
     handleUserCreation,
     handleUserUpdate,
@@ -81,5 +96,8 @@ module.exports = {
     handleFetchJde,
     handleUserUpdate,
     handleUserRolesAll,
-    handleUserUpdateExisting
+    handleUserUpdateExisting,
+    handleGetUserFuel,
+    handleAddUserAndRole,
+    handleFuelEmployee
 };

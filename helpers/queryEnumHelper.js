@@ -21,7 +21,11 @@ const QUERY_STRING = {
     GET_USER_BY_JDE: 'SELECT "JDE", fullname FROM public.users WHERE fullname LIKE ANY ($1)',
     GET_USER_ROLE_BY_ID: 'SELECT * FROM users_roles WHERE user_id = $1',
     INSERT_USER_ROLE: `INSERT INTO "users_roles" (user_id, breakdown, production, timeentry, coalhauling, weather) VALUES 
-    ($1, $2, $3, $4, $5, $6, NOW(), NOW())`
+    ($1, $2, $3, $4, $5, $6, NOW(), NOW())`,
+    
+    GET_USER_FUEL: `select u.id, u."JDE", u.fullname, u."position", u.division, ur.fuelman, ur.admin_fuel from users u 
+    join users_roles ur on u.id = ur.user_id 
+    where  ur.fuelman = true or ur.admin_fuel = true`
 }
 
 module.exports = {
