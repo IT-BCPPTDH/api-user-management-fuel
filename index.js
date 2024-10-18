@@ -5,6 +5,7 @@ const authRoutes = require('./routes/auth-routes');
 const masterRoutes = require('./routes/master-routes');
 const websocketRoute = require('./routes/websocket-route');
 require('dotenv').config();
+require('./proto/server/server')
 
 const port = process.env.PORT;
 const app = uWS.App();
