@@ -388,6 +388,56 @@ async function updateFuelman(arrayData){
   }
 }
 
+async function createEmpFuel(userData) {
+  try {
+    const newUser = { ...userData };
+    const password = newUser.password ? newUser.password : "abcd1234"
+    const password_hash = encrypter(password);
+  try {
+    const check = await db.query(QUERY_STRING.GET_OPERATOR_JDE, [userData.JDE])
+    let inserted
+    if(check.rowCount == 0){
+      inserted = await db.query(QUERY_STRING.CREATE_USER,
+      [newUser.JDE, newUser.fullname, newUser.position, newUser.division, password_hash]);
+    }
+    const user = check.rows[0].id
+    const { fuelman, admin_fuel, ...rest } = userData;
+    const newData = {user_id:user, ...(fuelman !== undefined && { fuelman }), ...(admin_fuel !== undefined && { admin_fuel })};
+    await updateRoles(newData)
+    return {
+      status: HTTP_STATUS.OK,
+      message: STATUS_MESSAGE.SUCCESS_CREATE_USER,
+      data: user.success ? user.data : {}
+    };
+  } catch (error) {
+    return {
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.ERR_CREATE_USER} ${error}`,
+    };
+  }
+  } catch (error) {
+    return {
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.FAILED_GET_ALL_USER} ${error}`,
+    };
+  }
+}
+
+async function getFuelEmployee() {
+  try {
+    const result = await db.query(QUERY_STRING.GET_USER_FUEL_ADMIN);
+    return {
+      status: HTTP_STATUS.OK,
+      data: result.rows
+    }
+  } catch (error) {
+    return {
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: `${STATUS_MESSAGE.FAILED_GET_ALL_USER} ${error}`,
+    };
+  }
+}
+
 module.exports = { 
   createUser, 
   getUser, 
@@ -405,5 +455,7 @@ module.exports = {
   updateExistingRole,
   getUserFuel,
   createUserAndRole,
-  updateFuelman
+  updateFuelman,
+  getFuelEmployee,
+  createEmpFuel
 };

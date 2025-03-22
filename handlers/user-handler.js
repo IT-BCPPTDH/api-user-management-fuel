@@ -14,7 +14,9 @@ const {
     updateExistingRole,
     getUserFuel,
     createUserAndRole,
-    updateFuelman
+    updateFuelman,
+    getFuelEmployee,
+    createEmpFuel
 } = require('../controller/user-controller.js');
 
 const { handleResponseJson, handleResponseParams } = require('./response-handler.js')
@@ -76,11 +78,19 @@ async function handleGetUserFuel(res, req) {
 }
 
 async function handleAddUserAndRole(res, req) {
-    await handleResponseJson(res, req, createUserAndRole)
+    await handleResponseJson(res, req, createEmpFuel)
 }
 
 async function handleFuelEmployee(res, req) {
     await handleResponseJson(res, req, updateFuelman, 0)
+}
+
+async function handleGetEmployeeFuel(res, req) {
+    await handleResponseParams(res, req, getFuelEmployee, 0)
+}
+
+async function handleAdEmpFuel(res, req) {
+    await handleResponseJson(res, req, createEmpFuel)
 }
 
 module.exports = {
@@ -99,5 +109,7 @@ module.exports = {
     handleUserUpdateExisting,
     handleGetUserFuel,
     handleAddUserAndRole,
-    handleFuelEmployee
+    handleFuelEmployee,
+    handleGetEmployeeFuel,
+    handleAdEmpFuel
 };
