@@ -25,7 +25,13 @@ const QUERY_STRING = {
     
     GET_USER_FUEL: `select u.id, u."JDE", u.fullname, u."position", u.division, ur.fuelman, ur.admin_fuel from users u 
     join users_roles ur on u.id = ur.user_id 
-    where  ur.fuelman = true or ur.admin_fuel = true`
+    where  ur.is_operator_fuel = true `,
+
+    GET_USER_FUEL_ADMIN: `select u.id, u."JDE", u.fullname, u."position", u.division, ur.fuelman, ur.admin_fuel from users u 
+    join users_roles ur on u.id = ur.user_id 
+    where  ur.fuelman = true or ur.admin_fuel = true`,
+
+    GET_OPERATOR_JDE: 'SELECT * FROM users where "JDE" = $1',
 }
 
 module.exports = {

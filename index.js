@@ -3,6 +3,7 @@ const uWS = require('uWebSockets.js');
 const userRoutes = require('./routes/user-routes');
 const authRoutes = require('./routes/auth-routes');
 const masterRoutes = require('./routes/master-routes');
+const operatorFuel = require('./routes/operator-fuelapp')
 const websocketRoute = require('./routes/websocket-route');
 require('dotenv').config();
 
@@ -40,6 +41,8 @@ authRoutes(app);
 
 // Use authentication routes
 masterRoutes(app);
+
+operatorFuel(app)
 
 // WebSocket route 
 websocketRoute(app)
