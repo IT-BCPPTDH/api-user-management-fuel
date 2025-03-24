@@ -6,6 +6,7 @@ const masterRoutes = require('./routes/master-routes');
 const operatorFuel = require('./routes/operator-fuelapp')
 const websocketRoute = require('./routes/websocket-route');
 require('dotenv').config();
+require('./proto/server/server')
 
 const port = process.env.PORT;
 const app = uWS.App();

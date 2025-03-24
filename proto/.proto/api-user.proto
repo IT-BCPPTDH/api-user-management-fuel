@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+
+package api_user;
+
+service Greeter {
+  // Sends a greeting
+  rpc getUserById (idUser) returns (Res) {};
+  rpc login (auth) returns (Res) {};
+}
+
+message Empty {}
+
+message arr {
+  repeated string data = 1;
+}
+
+message idUser {
+    string id = 1;
+}
+
+message auth{
+  string id = 1;
+  string password = 2;
+}
+
+
+message Res {
+  string data = 1;
+}
