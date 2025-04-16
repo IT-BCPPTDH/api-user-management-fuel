@@ -1,6 +1,7 @@
 const QUERY_STRING = {
     CREATE_USER : 'SELECT public.create_user($1, $2, $3, $4, $5)',
     GET_USER_BY_ID: 'SELECT * FROM user_view WHERE id = $1',
+    GET_USER_BY_JDE1: 'SELECT * FROM user_view WHERE "JDE" = $1',
     GET_MASTER_OPERATOR: 'SELECT * FROM user_operator',
     GET_ALL_USER: 'SELECT * FROM user_view',
     GET_USER_PAGINATED: 'SELECT * FROM public.get_users_paginated($1, $2)',
@@ -25,7 +26,14 @@ const QUERY_STRING = {
     
     GET_USER_FUEL: `select u.id, u."JDE", u.fullname, u."position", u.division, ur.fuelman, ur.admin_fuel from users u 
     join users_roles ur on u.id = ur.user_id 
-    where  ur.fuelman = true or ur.admin_fuel = true`
+    where  ur.is_operator_fuel = true `,
+
+    GET_USER_FUEL_ADMIN: `select u.id, u."JDE", u.fullname, u."position", u.division, ur.fuelman, ur.admin_fuel from users u 
+    join users_roles ur on u.id = ur.user_id 
+    where  ur.fuelman = true or ur.admin_fuel = true`,
+
+    GET_OPERATOR_JDE: 'SELECT * FROM users where "JDE" = $1',
+    CREATE_USER_EMPLOYEE: `SELECT public.create_user($1, $2, $3, $4, $5) As id`
 }
 
 module.exports = {
