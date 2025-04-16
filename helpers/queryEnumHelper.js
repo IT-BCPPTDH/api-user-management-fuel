@@ -33,6 +33,7 @@ const QUERY_STRING = {
     where  ur.fuelman = true or ur.admin_fuel = true`,
 
     GET_OPERATOR_JDE: 'SELECT * FROM users where "JDE" = $1',
+    CREATE_USER_EMPLOYEE: `SELECT public.create_user($1, $2, $3, $4, $5) As id`
 }
 
 module.exports = {
