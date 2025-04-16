@@ -188,15 +188,11 @@ async function updateRoles(updatedData) {
       const insertPlaceholders = insertColumns.map((_, i) => `$${i + 1}`).join(', ');
 
       const insertQuery = `INSERT INTO users_roles (${insertColumns.join(', ')}) VALUES (${insertPlaceholders})`;
-      
       await db.query(insertQuery, insertValues);
     }
 
-    const dataRole = await getRoles(user_id)
-
     return {
       status: HTTP_STATUS.OK,
-      data: dataRole.success ? dataRole.data : {},
       message: STATUS_MESSAGE.SUCCESS_UPDATE_USER
     };
   } catch (error) {
@@ -391,37 +387,50 @@ async function updateFuelman(arrayData){
 async function createEmpFuel(userData) {
   try {
     const newUser = { ...userData };
-    const password = newUser.password ? newUser.password : "abcd1234"
+    const password = newUser.password || "abcd1234";
     const password_hash = encrypter(password);
-  try {
-    const check = await db.query(QUERY_STRING.GET_OPERATOR_JDE, [userData.JDE])
-    let inserted
-    if(check.rowCount == 0){
-      inserted = await db.query(QUERY_STRING.CREATE_USER,
-      [newUser.JDE, newUser.fullname, newUser.position, newUser.division, password_hash]);
+
+    const check = await db.query(QUERY_STRING.GET_OPERATOR_JDE, [newUser.JDE]);
+
+    let userId;
+
+    if (check.rowCount === 0) {
+      const inserted = await db.query(QUERY_STRING.CREATE_USER_EMPLOYEE, [
+        newUser.JDE,
+        newUser.fullname,
+        newUser.position,
+        newUser.division,
+        password_hash,
+      ]);
+
+      userId = inserted.rows[0].id;
+    } else {
+      userId = check.rows[0].id;
     }
-    const user = check.rows[0].id
-    const { fuelman, admin_fuel, ...rest } = userData;
-    const newData = {user_id:user, ...(fuelman !== undefined && { fuelman }), ...(admin_fuel !== undefined && { admin_fuel })};
-    await updateRoles(newData)
+
+    const { fuelman, admin_fuel } = userData;
+    const newData = {
+      user_id: userId,
+      ...(fuelman !== undefined && { fuelman }),
+      ...(admin_fuel !== undefined && { admin_fuel }),
+    };
+
+    await updateRoles(newData);
+
     return {
       status: HTTP_STATUS.OK,
       message: STATUS_MESSAGE.SUCCESS_CREATE_USER,
-      data: user.success ? user.data : {}
+      data: { user_id: userId },
     };
+
   } catch (error) {
     return {
       status: HTTP_STATUS.BAD_REQUEST,
       message: `${STATUS_MESSAGE.ERR_CREATE_USER} ${error}`,
     };
   }
-  } catch (error) {
-    return {
-      status: HTTP_STATUS.BAD_REQUEST,
-      message: `${STATUS_MESSAGE.FAILED_GET_ALL_USER} ${error}`,
-    };
-  }
 }
+
 
 async function getFuelEmployee() {
   try {
